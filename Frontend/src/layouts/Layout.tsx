@@ -1,6 +1,7 @@
 import Footer from "../components/Footer"
 import Header from "../components/Header"
 import Hero from "../components/Hero"
+import Searchbar from "../components/Searchbar";
 
 
 //acecept any react component
@@ -15,6 +16,9 @@ const Layout = ({ children }: Props) => {
         <div className="flex flex-col min-h-screen">
             <Header />
             <Hero />
+            <div className="container mx-auto ">
+                <Searchbar />
+            </div>
             {/* this div will take the whole up space bcz of flex-1 */}
             <div className="container mx-auto flex-1 py-10">
                 {children}

@@ -10,6 +10,7 @@ const userRoutes = require('./routes/userRoutes')
 const authRoutes = require('./routes/authRoutes')
 const cookieParser = require('cookie-parser')
 import { v2 as cloudinary } from "cloudinary"
+import MyHotelsRoutes from './routes/MyhotelsRoutes'
 import HotelsRoutes from './routes/hotelsRoutes'
 cloudinary.config({
     cloud_name: process.env.CLOUDINARY_CLOUD_NAME,
@@ -28,7 +29,8 @@ app.use(express.urlencoded({ extended: true }));
 app.use(cookieParser());
 app.use('/api/auth', authRoutes);
 app.use('/api/users', userRoutes);
-app.use("/api/my-hotels", HotelsRoutes)
+app.use("/api/my-hotels", MyHotelsRoutes)
+app.use("/api/hotels", HotelsRoutes)
 
 app.use((err: Error, req: Request, res: Response, next: NextFunction) => {
     console.error(err.stack);
