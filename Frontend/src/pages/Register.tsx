@@ -30,7 +30,7 @@ const Register = () => {
         , onSuccess: async () => {
             console.log('register success');
             await queryClient.invalidateQueries("VALIDATETOKEN")
-            showToast({ message: "Registration Success!", type: "SUCCESS" })
+            showToast({ message: "Registration Success", type: "SUCCESS" })
             navigate("/")
         },
     })

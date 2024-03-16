@@ -38,15 +38,15 @@ test("should allow user to register", async ({ page }) => {
     page.getByRole("heading", { name: "Create an Account" })
   ).toBeVisible();
 
-  await page.locator("[name=firstname]").fill("test_firstName");
-  await page.locator("[name=lastname]").fill("test_lastName");
-  await page.locator("[name=email]").fill("1@1.com");
+  await page.locator("[name=firstname]").fill("test222_firstName");
+  await page.locator("[name=lastname]").fill("test1111_lastName");
+  await page.locator("[name=email]").fill("1@1122121.com");
   await page.locator("[name=password]").fill("password123");
   await page.locator("[name=confirmPassword]").fill("password123");
 
   await page.getByRole("button", { name: "Create Account" }).click();
 
-  await expect(page.getByText("Registration Success!")).toBeVisible();
+  await expect(page.getByText("Registration Success")).toBeVisible();
   await expect(page.getByRole("link", { name: "My Bookings" })).toBeVisible();
   await expect(page.getByRole("link", { name: "My Hotels" })).toBeVisible();
   await expect(page.getByRole("button", { name: "Sign Out" })).toBeVisible();
