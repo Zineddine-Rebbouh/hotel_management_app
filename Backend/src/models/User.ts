@@ -1,6 +1,6 @@
 import mongoose, { Schema, Model, Document } from 'mongoose';
 const bcrypt = require('bcrypt')
-interface UserType extends Document {
+export type UserType = {
     _id: string;
     firstname: string;
     lastname: string;

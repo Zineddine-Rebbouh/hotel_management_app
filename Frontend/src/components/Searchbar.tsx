@@ -77,6 +77,7 @@ const Searchbar = () => {
             <div>
                 <ReactDatePicker
                     selected={checkOut}
+                    placeholderText='Check-out Date'
                     onChange={(date) => setcheckIn(date as Date)}
                     selectsStart
                     endDate={checkOut}

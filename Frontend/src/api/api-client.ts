@@ -4,7 +4,8 @@ import { Inputs1 } from "../pages/Login";
 import { hotelType } from '../../../Backend/src/models/hotels'
 import { HotelSearchResponse } from '../../../Backend/src/types/types'
 import { useParams } from "react-router-dom";
-
+import { promises } from "dns";
+import { UserType } from '../../../Backend/src/models/User'
 export const register = async (formData: Inputs2) => {
 
     const response = await fetch('http://localhost:8000/api/users/register', {
@@ -24,6 +25,18 @@ export const register = async (formData: Inputs2) => {
     }
 
 };
+
+export const fetchCurrentUser = async (): Promise<UserType> => {
+    const response = await fetch('http://localhost:8000/api/users/me', {
+        credentials: "include"
+    })
+    if (!response.ok) {
+        throw new Error("Error fetching hotels");
+    }
+
+    return response.json();
+
+}
 
 export const Login = async (formData: Inputs1) => {
 
@@ -180,3 +193,18 @@ export const searchHotels = async (
 
     return response.json();
 };
+
+export const fetchHotelById = async (hotelId: string): Promise<hotelType> => {
+    const response = await fetch(`http://localhost:8000/api/hotels/` + hotelId)
+
+    if (!response.ok) {
+        throw new Error("Error fetching hotels");
+    }
+
+    return response.json();
+
+}
+
+
+
+

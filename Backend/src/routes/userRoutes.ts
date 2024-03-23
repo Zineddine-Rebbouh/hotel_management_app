@@ -1,3 +1,5 @@
+import { validateToken } from "../Middelware/validateToken"
+
 const express = require('express')
 const UserController = require('../Controllers/UserController')
 const router = express.Router()
@@ -10,6 +12,11 @@ router.post('/register',
         check("password", "Password with 6 or more characters required").isLength({ min: 6 })
     ],
     UserController.register
+)
+
+router.post('/me',
+    validateToken,
+    UserController.ConfirmPayment
 )
 
 module.exports = router; 

@@ -44,6 +44,20 @@ export const register = async (req: Request, res: Response<any>) => {
     }
 };
 
+
+export const ConfirmPayment = async (req: Request, res: Response) => {
+    const userId = req.userId;
+    try {
+        const user = await User.findById(userId).select("-password")
+        if (!user) {
+            return res.status(400).json({ message: "User not found" })
+        }
+        return res.json(user)
+    } catch (error) {
+        console.log(error);
+        return res.status(500)
+    }
+}
 // export const login = async (req: Request, res: Response<any>) => {
 //     // Implement login functionality...
 // };
