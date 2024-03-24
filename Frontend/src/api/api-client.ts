@@ -200,7 +200,7 @@ export const searchHotels = async (
 export const createRoomBooking = async (formData: BookingFormData,) => {
     const response = await fetch(`http://localhost:8000/api/hotels/${formData.hotelId}/bookings`, {
         credentials: "include",
-        method: "POOST",
+        method: "POST",
         body: JSON.stringify(
             formData
         ),
