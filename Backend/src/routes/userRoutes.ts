@@ -14,9 +14,9 @@ router.post('/register',
     UserController.register
 )
 
-router.post('/me',
+router.get('/me',
     validateToken,
-    UserController.ConfirmPayment
+    UserController.getUserDetails
 )
 
 module.exports = router; 

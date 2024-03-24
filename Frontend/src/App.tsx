@@ -9,13 +9,14 @@ import EditHotel from "./pages/EditHotel"
 import Search from "./pages/Search"
 import Detail from "./pages/DetailedHotel"
 import Booking from "./pages/Booking"
+import Home from "./pages/Home"
 
 function App() {
   const { isLoggedIn } = useAppContext()
   return (
     <Router>
       <Routes>
-        <Route path="/" element={<Layout>{<p>Home page</p>}</Layout>} />
+        <Route path="/" element={<Layout><Home /></Layout>} />
         <Route path="/sign-up" element={<Layout><Register /></Layout>} />
         <Route path="/sign-in" element={<Layout><Login /></Layout>} />
         <Route path="/search" element={<Layout><Search /></Layout>} />

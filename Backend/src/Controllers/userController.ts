@@ -45,7 +45,7 @@ export const register = async (req: Request, res: Response<any>) => {
 };
 
 
-export const ConfirmPayment = async (req: Request, res: Response) => {
+export const getUserDetails = async (req: Request, res: Response) => {
     const userId = req.userId;
     try {
         const user = await User.findById(userId).select("-password")

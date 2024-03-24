@@ -6,6 +6,9 @@ import { HotelSearchResponse } from '../../../Backend/src/types/types'
 import { useParams } from "react-router-dom";
 import { promises } from "dns";
 import { UserType } from '../../../Backend/src/models/User'
+import { paymentIntentResponse } from "../../../Backend/src/routes/hotelsRoutes";
+import { BookingFormData } from "../components/BookingForm";
+import { log } from "console";
 export const register = async (formData: Inputs2) => {
 
     const response = await fetch('http://localhost:8000/api/users/register', {
@@ -193,6 +196,53 @@ export const searchHotels = async (
 
     return response.json();
 };
+
+export const createRoomBooking = async (formData: BookingFormData,) => {
+    const response = await fetch(`http://localhost:8000/api/hotels/${formData.hotelId}/bookings`, {
+        credentials: "include",
+        method: "POOST",
+        body: JSON.stringify(
+            formData
+        ),
+        headers: {
+            "Content-Type": "application/json"
+        },
+    })
+
+    if (!response.ok) {
+        throw new Error("Error fetching hotels");
+    }
+
+    return response.json();
+
+
+}
+
+export const createPaymentIntent = async (hotelId: string, numberOfNights: string): Promise<paymentIntentResponse> => {
+    console.log(hotelId);
+    console.log(numberOfNights);
+
+    const response = await fetch(`http://localhost:8000/api/hotels/${hotelId}/booking/payment-intent`, {
+        credentials: "include",
+        method: "POST",
+        body: JSON.stringify({
+            numberOfNights
+        }),
+        headers: {
+            "Content-Type": "application/json"
+        },
+    })
+
+    if (!response.ok) {
+        throw new Error("Error fetching hotels");
+    }
+
+    console.log(response);
+
+    return response.json();
+
+}
+
 
 export const fetchHotelById = async (hotelId: string): Promise<hotelType> => {
     const response = await fetch(`http://localhost:8000/api/hotels/` + hotelId)
