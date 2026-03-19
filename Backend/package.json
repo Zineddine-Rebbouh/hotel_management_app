@@ -6,7 +6,7 @@
   "scripts": {
     "dev": "nodemon",
     "build": "npm install && npx tsc",
-    "start": "node ./dist/server.js",
+    "start": "node ./dist/src/server.js",
     "seed": "ts-node seed.ts",
     "e2e": "cross-env DOTENV_CONFIG_PATH=.env.e2e nodemon"
   },
