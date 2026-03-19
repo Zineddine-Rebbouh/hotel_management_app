@@ -2,7 +2,7 @@
   "name": "hotel-management-app",
   "version": "1.0.0",
   "description": "Full-stack hotel booking management application",
-  "main": "Backend/dist/server.js",
+  "main": "index.js",
   "scripts": {
     "dev": "concurrently \"npm run dev --prefix Backend\" \"npm run dev --prefix Frontend\"",
     "build": "npm run build --prefix Backend && npm run build --prefix Frontend",
