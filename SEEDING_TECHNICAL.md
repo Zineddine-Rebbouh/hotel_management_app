@@ -34,6 +34,7 @@ seed.ts
 ## 🧬 Data Generation Pipeline
 
 ### Phase 1: User Generation
+
 ```
 Input: count = 55
 Process:
@@ -48,6 +49,7 @@ Output: User[] with 55 unique users
 **Algorithm Complexity**: O(n) where n = user count
 
 ### Phase 2: Booking Generation
+
 ```
 Input: count = 200+, pricePerNight = variable
 Process:
@@ -61,11 +63,13 @@ Output: Booking[] embedded in hotels
 ```
 
 **Date Distribution Logic**:
+
 - 33% Past: 10-180 days ago
 - 33% Current/Upcoming: 1-60 days ahead
 - 34% Future: 60-180 days ahead
 
 ### Phase 3: Hotel Generation
+
 ```
 Input: count = 18, userIds[] = 55 IDs
 Process:
@@ -87,17 +91,20 @@ Output: Hotel[] with 18 hotels
 ## 📊 Data Constants
 
 ### User Names (55 total)
+
 - **Male First Names**: 20 names
 - **Female First Names**: 20 names
 - **Last Names**: 25 Algerian surnames
 - **Combination**: 20 × 20 + (25 × 20) = 900 possible combinations
 
 ### Geographic Data
+
 - **Cities**: 17 Algerian cities
 - **Hotels per City**: 1-2 (distributed)
 - **Hotels**: 18 total
 
 ### Hotel Facilities (20 available)
+
 ```
 WiFi                Room Service       Bathrobe
 Air Conditioning    Business Center    Hair Dryer
@@ -111,6 +118,7 @@ Conference Room
 ```
 
 ### Room Types (7 types)
+
 - Single
 - Double
 - Twin
@@ -120,6 +128,7 @@ Conference Room
 - Superior
 
 ### Price Strategy
+
 ```
 Budget Hotels:           $50-$80
 Mid-Range Hotels:        $80-$150
@@ -131,6 +140,7 @@ Random Distribution: Uses weighted probability
 ```
 
 ### Star Ratings
+
 ```
 Probability Distribution:
 - 3 Stars: 30%
@@ -147,6 +157,7 @@ Quality Correlation:
 ## 🔗 Data Relationships
 
 ### User → Hotel (1:Many)
+
 ```typescript
 User {
   _id: ObjectId (e.g., "507f1f77bcf86cd799439011")
@@ -160,6 +171,7 @@ Hotel {
 ```
 
 ### Hotel → Booking (1:Many - Embedded)
+
 ```typescript
 Hotel {
   _id: ObjectId
@@ -181,6 +193,7 @@ Hotel {
 ```
 
 ### Validation Rules
+
 ```
 ✓ Hotel.userId must point to existing User
 ✓ Booking.userId may differ from Hotel.userId (guest != owner)
@@ -195,6 +208,7 @@ Hotel {
 ## 🎲 Randomization Strategies
 
 ### 1. Random Element Selection
+
 ```typescript
 function getRandomElement<T>(array: T[]): T {
   return array[Math.floor(Math.random() * array.length)];
@@ -203,6 +217,7 @@ function getRandomElement<T>(array: T[]): T {
 ```
 
 ### 2. Random Subset Selection
+
 ```typescript
 function getRandomElements<T>(array: T[], min: number, max: number): T[] {
   const count = Math.floor(Math.random() * (max - min + 1)) + min;
@@ -214,6 +229,7 @@ function getRandomElements<T>(array: T[], min: number, max: number): T[] {
 ```
 
 ### 3. Date Range Generation
+
 ```typescript
 function generateBookingDates(): { checkIn: Date; checkOut: Date } {
   const bookingType = Math.random();
@@ -229,6 +245,7 @@ function generateBookingDates(): { checkIn: Date; checkOut: Date } {
 ```
 
 ### 4. Email Uniqueness Guarantee
+
 ```typescript
 const usedEmails = new Set<string>();
 let email = generateEmail(firstName, lastName, 0);
@@ -245,6 +262,7 @@ usedEmails.add(email);
 ## 🔐 Security Implementation
 
 ### Password Hashing
+
 ```typescript
 const hashedPassword = await bcrypt.hash("Password123!", 10);
 // Algorithm: bcrypt
@@ -253,8 +271,10 @@ const hashedPassword = await bcrypt.hash("Password123!", 10);
 ```
 
 ### MongoDB Connection
+
 ```typescript
-const mongoUri = process.env.MONGO_DB_CONNECTION || 
+const mongoUri =
+  process.env.MONGO_DB_CONNECTION ||
   "mongodb://localhost:27017/hotel_management_app";
 await mongoose.connect(mongoUri);
 // Credentials via environment variables only
@@ -262,6 +282,7 @@ await mongoose.connect(mongoUri);
 ```
 
 ### Data Validation
+
 ```typescript
 // Mongoose schema validation before insert
 // Field type checking
@@ -275,18 +296,20 @@ await mongoose.connect(mongoUri);
 ## ⚡ Performance Optimization
 
 ### Bulk Insert Operations
+
 ```typescript
 // Instead of:
 for (const user of users) {
-  await User.insertOne(user);  // N database round-trips
+  await User.insertOne(user); // N database round-trips
 }
 
 // Used:
-await User.insertMany(users);  // 1 database round-trip
+await User.insertMany(users); // 1 database round-trip
 // Performance: ~50-100x faster
 ```
 
 ### Efficient Memory Usage
+
 ```typescript
 // Object reuse where possible
 // Streamed data generation
@@ -295,6 +318,7 @@ await User.insertMany(users);  // 1 database round-trip
 ```
 
 ### Database Operations
+
 ```
 Operation Sequence:
 1. Connect to MongoDB          [1 op]
@@ -315,6 +339,7 @@ Total Time: ~2-5 seconds (depends on MongoDB speed)
 ## 📊 Statistical Distribution
 
 ### User Distribution
+
 ```
 Total: 55 users
 Gender Ratio:
@@ -330,6 +355,7 @@ Email Distribution:
 ```
 
 ### Hotel Distribution
+
 ```
 Total: 18 hotels
 By Star Rating:
@@ -351,6 +377,7 @@ By Room Type:
 ```
 
 ### Booking Distribution
+
 ```
 Total: 200+ bookings (average ~11 per hotel)
 By Date Range:
@@ -376,6 +403,7 @@ By Length of Stay:
 ## 🧪 Validation & Testing
 
 ### Pre-Insert Validation
+
 ```typescript
 // Mongoose automatically validates:
 ✓ Field types match schema
@@ -387,6 +415,7 @@ By Length of Stay:
 ```
 
 ### Post-Insert Verification
+
 ```typescript
 // After seeding, verify:
 ✓ User count == 55
@@ -407,22 +436,26 @@ By Length of Stay:
 ### Main Sections
 
 **1. Constants (Lines 1-150)**
+
 - Algerian names, cities, facilities
 - Hotel templates and descriptions
 - Cloudinary image URLs
 
 **2. Utility Functions (Lines 150-350)**
+
 - Random selection helpers
 - Email and phone generation
 - Date manipulation
 - Price calculation
 
 **3. Data Generators (Lines 350-600)**
+
 - generateUsers(count)
 - generateBookings(count, hotelPrice)
 - generateHotels(count, userIds)
 
 **4. Seed Execution (Lines 600-end)**
+
 - Database connection
 - Data insertion
 - Statistics calculation
@@ -485,17 +518,20 @@ EXIT with success
 ## 📈 Scale & Performance
 
 ### Current Configuration
+
 - **Users**: 55 (scales to 1000+)
 - **Hotels**: 18 (scales to 500+)
 - **Bookings**: 200+ (scales to 10,000+)
 
 ### Performance Metrics
+
 - **Generation Time**: ~500ms (data generation)
 - **Database Insert**: ~1-2 seconds
 - **Total Runtime**: ~2-5 seconds
 - **Memory Usage**: <50MB
 
 ### Scalability Notes
+
 - Linear scaling for users/hotels
 - O(n) performance for bookings
 - Bulk insert keeps database operations efficient
@@ -508,16 +544,19 @@ EXIT with success
 ### Easy Customization
 
 **1. User Count**
+
 ```typescript
-const userData = await generateUsers(55);  // Change to 100, 500, etc.
+const userData = await generateUsers(55); // Change to 100, 500, etc.
 ```
 
 **2. Hotel Count**
+
 ```typescript
-const hotelData = generateHotels(18, userIds);  // Change to 50, 100, etc.
+const hotelData = generateHotels(18, userIds); // Change to 50, 100, etc.
 ```
 
 **3. Bookings per Hotel**
+
 ```typescript
 const bookingCount = Math.floor(Math.random() * 25) + 5;
 // Current: 5-25 bookings per hotel
@@ -525,15 +564,17 @@ const bookingCount = Math.floor(Math.random() * 25) + 5;
 ```
 
 **4. Price Range**
+
 ```typescript
 const priceRanges = [
-  { min: 50, max: 80 },      // Budget
-  { min: 80, max: 150 },     // Mid-range
+  { min: 50, max: 80 }, // Budget
+  { min: 80, max: 150 }, // Mid-range
   // Add or modify ranges
 ];
 ```
 
 **5. Database Connection**
+
 ```typescript
 // Use environment variable
 process.env.MONGO_DB_CONNECTION
@@ -570,6 +611,7 @@ mongodb+srv://user:password@cluster.mongodb.net/db
 ## 🎓 Learning Resources
 
 ### Mongoose Bulk Operations
+
 ```typescript
 // Insert many documents efficiently
 const results = await Model.insertMany(documents);
@@ -577,6 +619,7 @@ const results = await Model.insertMany(documents);
 ```
 
 ### Document Relationships
+
 ```typescript
 // Embedded documents (used here)
 Hotel { bookings: [Booking] }
@@ -587,9 +630,10 @@ Booking { _id, hotelId }
 ```
 
 ### Date Arithmetic
+
 ```typescript
 const date = new Date();
-date.setDate(date.getDate() + 7);  // Add 7 days
+date.setDate(date.getDate() + 7); // Add 7 days
 date.setDate(date.getDate() - 14); // Subtract 14 days
 ```
 
@@ -600,26 +644,31 @@ date.setDate(date.getDate() - 14); // Subtract 14 days
 This seeding solution provides:
 
 ✨ **Production-Ready Data**
+
 - Realistic, validated, consistent data
 - Proper relationships and constraints
 - Business logic compliance
 
 🚀 **Performance Optimized**
+
 - Bulk operations for speed
 - Efficient memory usage
 - Minimal database round-trips
 
 🔒 **Secure Implementation**
+
 - Password hashing with bcrypt
 - No hardcoded secrets
 - Environment-based configuration
 
 📊 **Comprehensive Coverage**
+
 - All collections seeded
 - Complete data relationships
 - Full business scenarios
 
 🎨 **Authentic & Diverse**
+
 - Algerian cultural data
 - Varied price points
 - Realistic distributions

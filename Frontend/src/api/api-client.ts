@@ -256,9 +256,12 @@ export const fetchMyBookings = async () => {
 // GET dashboard statistics for hotel owner
 // ============================================
 export const fetchDashboardStats = async () => {
-  const response = await fetch(`${API_BASE_URL}/api/my-hotels/dashboard/stats`, {
-    credentials: "include",
-  });
+  const response = await fetch(
+    `${API_BASE_URL}/api/my-hotels/dashboard/stats`,
+    {
+      credentials: "include",
+    },
+  );
 
   if (!response.ok) {
     throw new Error("Error fetching dashboard statistics");

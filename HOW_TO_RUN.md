@@ -3,6 +3,7 @@
 ## 📋 Prerequisites
 
 Before you start, make sure you have:
+
 - **Node.js** v16+ ([Download](https://nodejs.org/))
 - **MongoDB** (either local or [MongoDB Atlas](https://www.mongodb.com/cloud/atlas) cloud)
 - **Git** (already have it)
@@ -12,6 +13,7 @@ Before you start, make sure you have:
 ## ⚙️ Step-by-Step Setup
 
 ### Step 1: Navigate to Project
+
 ```bash
 cd "c:\Users\mkrym\OneDrive\Documents\My Folders\project\hotel\hotel_management_app"
 ```
@@ -19,12 +21,14 @@ cd "c:\Users\mkrym\OneDrive\Documents\My Folders\project\hotel\hotel_management_
 ### Step 2: Configure Backend Environment
 
 **Copy the example environment file:**
+
 ```bash
 cd Backend
 cp .env.example .env
 ```
 
 **Edit the `.env` file** with your settings:
+
 ```
 # MongoDB Connection
 MONGO_DB_CONNECTION=mongodb://localhost:27017/hotel_management_app
@@ -44,6 +48,7 @@ CORS_ORIGIN=http://localhost:5173
 ```
 
 **Quick Setup** (use these defaults for local testing):
+
 ```
 MONGO_DB_CONNECTION=mongodb://localhost:27017/hotel_management_app
 PORT=8000
@@ -79,12 +84,14 @@ Or use **MongoDB Atlas** (cloud) if you prefer - just update the connection stri
 You'll need **3 terminal windows** for this:
 
 #### Terminal 1: Backend Server
+
 ```bash
 cd Backend
 npm run dev
 ```
 
 **Expected output:**
+
 ```
 > backend@1.0.0 dev
 > nodemon
@@ -101,12 +108,14 @@ Server running on port 8000
 ---
 
 #### Terminal 2: Frontend App
+
 ```bash
 cd Frontend
 npm run dev
 ```
 
 **Expected output:**
+
 ```
 > frontend@0.0.0 dev
 > vite
@@ -121,12 +130,14 @@ npm run dev
 ---
 
 #### Terminal 3: Seed Database (OPTIONAL - Run Once)
+
 ```bash
 cd Backend
 npm run seed
 ```
 
 **Expected output:**
+
 ```
 🌱 Starting database seed...
 ✅ Connected to MongoDB
@@ -154,18 +165,21 @@ http://localhost:5173
 After seeding, use these accounts:
 
 ### Account 1: Traveler
+
 ```
 Email: guest@example.com
 Password: password123
 ```
 
 ### Account 2: Hotel Owner #1
+
 ```
 Email: host1@example.com
 Password: password123
 ```
 
 ### Account 3: Hotel Owner #2
+
 ```
 Email: host2@example.com
 Password: password456
@@ -178,11 +192,13 @@ Or simply **create a new account** via "Sign Up"
 ## ✨ Features to Test
 
 ### 1. 🏨 Search Hotels
+
 - Click "Search" or use homepage search
 - Filter by destination, price, facilities, ratings
 - Click on a hotel to see details
 
 ### 2. 💳 Book a Hotel
+
 - Click "Book Now" on a hotel detail page
 - Select check-in/check-out dates
 - Enter number of guests
@@ -194,15 +210,18 @@ Or simply **create a new account** via "Sign Up"
   ```
 
 ### 3. 📋 View My Bookings
+
 - Click "My Bookings" in header (after login)
 - See all your bookings with details
 
 ### 4. 🏢 Manage Hotels (Hotel Owner)
+
 - Click "My Hotels" in header
 - Click "Add Hotel" to create a new hotel
 - Upload images, fill details, save
 
 ### 5. 📊 View Dashboard (Hotel Owner)
+
 - Click "Dashboard" in header
 - See analytics:
   - Total hotels, bookings, revenue
@@ -239,18 +258,21 @@ curl http://localhost:8000/api/hotels/search?destination=London
 ## 🐛 Troubleshooting
 
 ### Error: "MongoDB connection error"
+
 ```
 Solution: Make sure MongoDB is running
 mongod
 ```
 
 ### Error: "CORS policy blocked"
+
 ```
 Solution: Check Backend .env
 CORS_ORIGIN=http://localhost:5173
 ```
 
 ### Error: "Port 8000 already in use"
+
 ```
 Solution: Kill the process on port 8000
 # On Windows PowerShell:
@@ -259,6 +281,7 @@ taskkill /PID <PID> /F
 ```
 
 ### Error: "Stripe key not found"
+
 ```
 Solution: This is okay for development.
 Stripe payments won't work until you add real test keys.
@@ -266,6 +289,7 @@ Use card 4242 4242 4242 4242 anyway for testing UI.
 ```
 
 ### Images not uploading
+
 ```
 Solution: Cloudinary keys are placeholders.
 Update in .env with your own Cloudinary account:
@@ -320,6 +344,7 @@ MongoDB
 ## 📞 Need Help?
 
 Refer to these docs in the project:
+
 - `README.md` — Setup & troubleshooting
 - `COMPLETION_SUMMARY.md` — What was done
 - `PROJECT_STATUS.md` — Current status

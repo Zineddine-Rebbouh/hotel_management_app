@@ -28,18 +28,21 @@ hotel_management_app/
 ### 1. Install Dependencies
 
 **Backend:**
+
 ```bash
 cd Backend
 npm install
 ```
 
 **Frontend:**
+
 ```bash
 cd Frontend
 npm install
 ```
 
 **E2E Tests:**
+
 ```bash
 cd e2e
 npm install
@@ -50,6 +53,7 @@ npm install
 ### 2. Configure Environment Variables
 
 #### Backend (`.env`)
+
 Copy `.env.example` and update with your credentials:
 
 ```bash
@@ -58,6 +62,7 @@ cp .env.example .env
 ```
 
 Edit `.env` with:
+
 ```
 MONGO_DB_CONNECTION=mongodb://localhost:27017/hotel_management_app
 PORT=8000
@@ -76,6 +81,7 @@ CORS_ORIGIN=http://localhost:5173
 ```
 
 #### Frontend (`.env.local`)
+
 ```
 VITE_API_BASE_URL=http://localhost:8000
 VITE_STRIPE_PUBLIC_KEY=pk_test_your_key
@@ -103,6 +109,7 @@ npm run seed
 ```
 
 **Creates:**
+
 - 2 demo users (host1@example.com, host2@example.com)
 - 5 sample hotels across different cities
 - 1 sample booking
@@ -112,17 +119,21 @@ npm run seed
 ### 5. Start the Development Servers
 
 **Terminal 1 - Backend:**
+
 ```bash
 cd Backend
 npm run dev
 ```
+
 Server runs on `http://localhost:8000`
 
 **Terminal 2 - Frontend:**
+
 ```bash
 cd Frontend
 npm run dev
 ```
+
 App opens at `http://localhost:5173`
 
 ---
@@ -130,6 +141,7 @@ App opens at `http://localhost:5173`
 ## 📝 Available Routes & Features
 
 ### Public Routes
+
 - `/` — Home page with latest destinations
 - `/search` — Search and filter hotels
 - `/detail/:hotelId` — Hotel details page
@@ -137,6 +149,7 @@ App opens at `http://localhost:5173`
 - `/sign-up` — User registration
 
 ### Authenticated Routes (After Login)
+
 - `/my-bookings` — View your bookings across all hotels
 - `/my-hotels` — Manage your hotels (for hotel owners)
 - `/add-hotel` — Add a new hotel
@@ -149,10 +162,12 @@ App opens at `http://localhost:5173`
 ## 🔑 Demo Credentials
 
 **User 1 (Traveler):**
+
 - Email: `guest@example.com`
 - Password: `password123`
 
 **User 2 (Hotel Owner):**
+
 - Email: `host1@example.com`
 - Password: `password123`
 
@@ -171,6 +186,7 @@ npm test
 ```
 
 This will run:
+
 - `auth.spec.ts` — Login and registration tests
 - `hotel.spec.ts` — Hotel search and filter tests
 - `menage.hotel.spec.ts` — Hotel management tests
@@ -182,18 +198,21 @@ This will run:
 ## 📊 API Endpoints
 
 ### Authentication
+
 - `POST /api/auth/login` — User login
 - `POST /api/users/register` — User registration
 - `GET /api/auth/validate-token` — Validate JWT token
 - `POST /api/auth/logout` — User logout
 
 ### Hotels
+
 - `GET /api/hotels/search?destination=...` — Search hotels
 - `GET /api/hotels/:id` — Get hotel details
 - `POST /api/hotels/:hotelId/booking/payment-intent` — Create Stripe payment intent
 - `POST /api/hotels/:hotelId/bookings` — Create booking
 
 ### User Hotels (Owner)
+
 - `GET /api/my-hotels` — Get user's hotels
 - `POST /api/my-hotels` — Add new hotel
 - `PUT /api/my-hotels/:hotelId` — Update hotel
@@ -202,6 +221,7 @@ This will run:
 - `GET /api/hotels/:hotelId/bookings` — View hotel's bookings
 
 ### User Bookings
+
 - `GET /api/hotels/user/bookings` — Get user's bookings
 
 ---
@@ -211,6 +231,7 @@ This will run:
 ### Build for Production
 
 **Backend:**
+
 ```bash
 cd Backend
 npm run build
@@ -218,6 +239,7 @@ npm start
 ```
 
 **Frontend:**
+
 ```bash
 cd Frontend
 npm run build
@@ -230,6 +252,7 @@ Output in `Frontend/dist/`
 ## 📦 Key Dependencies
 
 ### Backend
+
 - `express` — Web framework
 - `mongoose` — MongoDB ODM
 - `jsonwebtoken` — JWT authentication
@@ -239,6 +262,7 @@ Output in `Frontend/dist/`
 - `cors` — Cross-origin requests
 
 ### Frontend
+
 - `react` & `react-dom` — UI library
 - `vite` — Build tool
 - `react-router-dom` — Routing
@@ -253,27 +277,35 @@ Output in `Frontend/dist/`
 ## 🐛 Troubleshooting
 
 ### MongoDB Connection Error
+
 ```
 MongoDB connection error: connect ECONNREFUSED
 ```
+
 **Solution:** Ensure MongoDB is running (`mongod`) or update `MONGO_DB_CONNECTION` with Atlas string.
 
 ### Stripe Key Not Working
+
 ```
 Error creating payment intent
 ```
+
 **Solution:** Ensure `STRIPE_SECRET_KEY` is a valid Stripe test key (starts with `sk_test_`).
 
 ### CORS Errors
+
 ```
 Access to XMLHttpRequest has been blocked by CORS policy
 ```
+
 **Solution:** Update `CORS_ORIGIN` in `.env` to match your frontend URL (default: `http://localhost:5173`).
 
 ### TypeScript Errors in Frontend Build
+
 ```
 Cannot find type definition file for 'react-datepicker'
 ```
+
 **Solution:** Already fixed. A local declaration file is in `src/types/react-datepicker.d.ts`.
 
 ---
@@ -299,7 +331,7 @@ Cannot find type definition file for 'react-datepicker'
 ✅ **Booking System** — Create, track, and view bookings  
 ✅ **Dashboard Analytics** — Revenue, bookings by month, per-hotel stats  
 ✅ **Responsive Design** — Tailwind CSS, mobile-friendly  
-✅ **E2E Testing** — Playwright test suite  
+✅ **E2E Testing** — Playwright test suite
 
 ---
 

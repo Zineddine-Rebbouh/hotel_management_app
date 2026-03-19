@@ -124,7 +124,15 @@ const HOTEL_NAMES_TEMPLATES = [
   "Hotel {City} Royal",
 ];
 
-const ROOM_TYPES = ["Single", "Double", "Twin", "Suite", "Deluxe Suite", "Standard", "Superior"];
+const ROOM_TYPES = [
+  "Single",
+  "Double",
+  "Twin",
+  "Suite",
+  "Deluxe Suite",
+  "Standard",
+  "Superior",
+];
 
 const FACILITIES = [
   "WiFi",
@@ -213,8 +221,18 @@ function getRandomElements<T>(array: T[], min: number, max: number): T[] {
   return shuffled.slice(0, count);
 }
 
-function generateEmail(firstName: string, lastName: string, index: number): string {
-  const domains = ["gmail.com", "outlook.com", "yahoo.com", "example.dz", "email.com"];
+function generateEmail(
+  firstName: string,
+  lastName: string,
+  index: number,
+): string {
+  const domains = [
+    "gmail.com",
+    "outlook.com",
+    "yahoo.com",
+    "example.dz",
+    "email.com",
+  ];
   const domain = getRandomElement(domains);
   const username = `${firstName.toLowerCase()}.${lastName.toLowerCase()}${index > 0 ? index : ""}`;
   return `${username}@${domain}`;
@@ -331,7 +349,7 @@ function generateBookings(count: number, hotelPrice: number) {
   for (let i = 0; i < count; i++) {
     const { checkIn, checkOut } = generateBookingDates();
     const lengthOfStay = Math.ceil(
-      (checkOut.getTime() - checkIn.getTime()) / (1000 * 60 * 60 * 24)
+      (checkOut.getTime() - checkIn.getTime()) / (1000 * 60 * 60 * 24),
     );
     const adultCount = Math.floor(Math.random() * 3) + 1;
     const childCount = Math.floor(Math.random() * 3);
@@ -367,9 +385,10 @@ function generateHotels(count: number, userIds: string[]) {
     const selectedFacilities = getRandomElements(FACILITIES, 5, 12);
     const imageUrls = getRandomElements(CLOUDINARY_IMAGES, 3, 6);
 
-    const description = Math.random() > 0.5
-      ? getRandomElement(HOTEL_DESCRIPTIONS_EN)
-      : getRandomElement(HOTEL_DESCRIPTIONS_FR);
+    const description =
+      Math.random() > 0.5
+        ? getRandomElement(HOTEL_DESCRIPTIONS_EN)
+        : getRandomElement(HOTEL_DESCRIPTIONS_FR);
 
     hotels.push({
       userId: getRandomElement(userIds),
@@ -442,7 +461,9 @@ const seedData = async () => {
     console.log(`   • Total Bookings: ${totalBookings}`);
     console.log(`\n🌍 Geographic Coverage:`);
     console.log(`   • Algerian Cities: ${ALGERIAN_CITIES.length}`);
-    console.log(`   • Hotels per City: ${Math.round(createdHotels.length / ALGERIAN_CITIES.length)}`);
+    console.log(
+      `   • Hotels per City: ${Math.round(createdHotels.length / ALGERIAN_CITIES.length)}`,
+    );
     console.log(`\n🎨 Data Features:`);
     console.log(`   • Available Facilities: ${FACILITIES.length}`);
     console.log(`   • Hotel Images (Cloudinary): ${CLOUDINARY_IMAGES.length}`);
@@ -458,7 +479,9 @@ const seedData = async () => {
     console.log("=".repeat(55));
 
     console.log("\n👤 Sample User:");
-    console.log(`   Name: ${createdUsers[0].firstname} ${createdUsers[0].lastname}`);
+    console.log(
+      `   Name: ${createdUsers[0].firstname} ${createdUsers[0].lastname}`,
+    );
     console.log(`   Email: ${createdUsers[0].email}`);
 
     const sampleHotel = createdHotels[0];
@@ -469,7 +492,9 @@ const seedData = async () => {
     console.log(`   Price: $${sampleHotel.pricePerNight}/night`);
     console.log(`   Rating: ${"⭐".repeat(sampleHotel.starRating)}`);
     console.log(`   Bookings: ${sampleHotel.bookings.length}`);
-    console.log(`   Facilities: ${sampleHotel.facilities.slice(0, 3).join(", ")}...`);
+    console.log(
+      `   Facilities: ${sampleHotel.facilities.slice(0, 3).join(", ")}...`,
+    );
     console.log(`   Images: ${sampleHotel.imageUrls.length} uploaded`);
 
     if (sampleHotel.bookings.length > 0) {
@@ -477,20 +502,18 @@ const seedData = async () => {
       const sampleBooking = sampleHotel.bookings[0];
       const days = Math.ceil(
         (sampleBooking.checkOut.getTime() - sampleBooking.checkIn.getTime()) /
-          (1000 * 60 * 60 * 24)
+          (1000 * 60 * 60 * 24),
       );
-      console.log(`   Guest: ${sampleBooking.firstName} ${sampleBooking.lastName}`);
+      console.log(
+        `   Guest: ${sampleBooking.firstName} ${sampleBooking.lastName}`,
+      );
       console.log(`   Email: ${sampleBooking.email}`);
-      console.log(
-        `   Check-in: ${sampleBooking.checkIn.toDateString()}`
-      );
-      console.log(
-        `   Check-out: ${sampleBooking.checkOut.toDateString()}`
-      );
+      console.log(`   Check-in: ${sampleBooking.checkIn.toDateString()}`);
+      console.log(`   Check-out: ${sampleBooking.checkOut.toDateString()}`);
       console.log(`   Duration: ${days} nights`);
       console.log(`   Total Cost: $${sampleBooking.totalCost}`);
       console.log(
-        `   Guests: ${sampleBooking.adultCount} adults, ${sampleBooking.childCount} children`
+        `   Guests: ${sampleBooking.adultCount} adults, ${sampleBooking.childCount} children`,
       );
     }
 

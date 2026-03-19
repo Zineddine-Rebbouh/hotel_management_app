@@ -283,22 +283,24 @@ const seedPremiumHotels = async () => {
     console.log("=".repeat(70));
     console.log("\n📊 SUMMARY:");
     console.log(`   • Hotels Created: ${createdHotels.length}`);
-    console.log(`   • Admin User: ${adminUser.firstname} ${adminUser.lastname}`);
+    console.log(
+      `   • Admin User: ${adminUser.firstname} ${adminUser.lastname}`,
+    );
     console.log(`   • Email: ${adminUser.email}`);
     console.log("\n🏨 HOTELS GENERATED:\n");
 
     createdHotels.forEach((hotel, index) => {
       console.log(
-        `${index + 1}. ${hotel.name.toUpperCase().padEnd(40)} (${hotel.city})`
+        `${index + 1}. ${hotel.name.toUpperCase().padEnd(40)} (${hotel.city})`,
       );
       console.log(`   ⭐ Rating: ${hotel.starRating}/5`);
       console.log(`   💰 Price: $${hotel.pricePerNight}/night`);
       console.log(`   🖼️  Images: ${hotel.imageUrls.length}`);
       console.log(
-        `   🛏️  Type: ${hotel.type} (${hotel.adultCount}A, ${hotel.childCount}C)`
+        `   🛏️  Type: ${hotel.type} (${hotel.adultCount}A, ${hotel.childCount}C)`,
       );
       console.log(
-        `   ✨ Facilities: ${hotel.facilities.length} premium amenities`
+        `   ✨ Facilities: ${hotel.facilities.length} premium amenities`,
       );
       console.log();
     });
@@ -314,8 +316,12 @@ const seedPremiumHotels = async () => {
       console.log("\n" + "─".repeat(70));
       console.log(`📍 ${hotel.name}`);
       console.log("─".repeat(70));
-      console.log(`Description Preview: ${hotel.description.substring(0, 100)}...`);
-      console.log(`Images: ${hotel.imageUrls.map((url) => url.substring(0, 50) + "...").join("\n         ")}`);
+      console.log(
+        `Description Preview: ${hotel.description.substring(0, 100)}...`,
+      );
+      console.log(
+        `Images: ${hotel.imageUrls.map((url) => url.substring(0, 50) + "...").join("\n         ")}`,
+      );
     });
 
     console.log("\n" + "=".repeat(70));

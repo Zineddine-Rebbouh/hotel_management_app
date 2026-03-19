@@ -19,23 +19,25 @@ npm run seed
 
 ## 📦 What Gets Seeded
 
-| Collection | Count | Details |
-|-----------|-------|---------|
-| **Users** | 55 | Algerian names, unique emails, bcrypt-hashed passwords |
-| **Hotels** | 18 | Across 17 Algerian cities, $50-$500/night, 3-5⭐ |
-| **Bookings** | 200+ | Embedded in hotels, diverse dates (past/future) |
+| Collection   | Count | Details                                                |
+| ------------ | ----- | ------------------------------------------------------ |
+| **Users**    | 55    | Algerian names, unique emails, bcrypt-hashed passwords |
+| **Hotels**   | 18    | Across 17 Algerian cities, $50-$500/night, 3-5⭐       |
+| **Bookings** | 200+  | Embedded in hotels, diverse dates (past/future)        |
 
 ---
 
 ## 🔑 Login Credentials
 
 **All seeded users use the same password:**
+
 ```
 Email: [Any seeded user email]
 Password: Password123!
 ```
 
 **Example**:
+
 ```
 Email: mohamed.benali@gmail.com
 Password: Password123!
@@ -144,12 +146,14 @@ After running `npm run seed`, you should see:
 ## 🔧 Common Tasks
 
 ### Re-seed Database
+
 ```bash
 npm run seed
 # Clears all data and inserts fresh seeded data
 ```
 
 ### Check Database Size
+
 ```bash
 # MongoDB shell
 use hotel_management_app
@@ -157,18 +161,21 @@ db.stats()
 ```
 
 ### View Seeded Users
+
 ```bash
 # MongoDB shell
 db.users.find().pretty()
 ```
 
 ### View Seeded Hotels
+
 ```bash
 # MongoDB shell
 db.hotels.find({ city: "Algiers" }).pretty()
 ```
 
 ### Count Total Bookings
+
 ```bash
 # MongoDB shell
 db.hotels.aggregate([
@@ -199,12 +206,14 @@ PORT=3000
 ## 📋 Seeded Data Categories
 
 ### User Types (All Customers by Default)
+
 - 55 unique users
 - Algerian names (authentic)
 - Real-world email domains
 - Password-protected with bcrypt
 
 ### Hotel Types
+
 ```
 Budget Hotels:           20% ($50-$80/night)
 Mid-Range:               30% ($80-$150/night)
@@ -213,6 +222,7 @@ Luxury:                  20% ($200-$500/night)
 ```
 
 ### Room Types
+
 - Single
 - Double
 - Twin
@@ -222,6 +232,7 @@ Luxury:                  20% ($200-$500/night)
 - Superior
 
 ### Cities (Algerian)
+
 ```
 Algiers          Constantine      Skikda
 Oran             Tlemcen          Guelma
@@ -267,6 +278,7 @@ Setif            Medea
 ## 📚 Detailed Docs
 
 For more detailed information, see:
+
 - **[SEEDING_GUIDE.md](./SEEDING_GUIDE.md)** - Complete usage guide
 - **[SEEDING_TECHNICAL.md](./SEEDING_TECHNICAL.md)** - Technical implementation details
 
@@ -274,32 +286,35 @@ For more detailed information, see:
 
 ## 🆘 Troubleshooting
 
-| Issue | Solution |
-|-------|----------|
-| MongoDB connection fails | Ensure MongoDB is running; check `.env` URI |
-| ts-node not found | `npm install --save-dev ts-node` |
-| Duplicate key error | Run `npm run seed` again (clears & re-seeds) |
-| Port already in use | Change `PORT` in `.env` or kill process |
-| bcrypt errors | `npm install bcrypt` |
-| Password hash mismatch | Use `Password123!` for all seeded users |
+| Issue                    | Solution                                     |
+| ------------------------ | -------------------------------------------- |
+| MongoDB connection fails | Ensure MongoDB is running; check `.env` URI  |
+| ts-node not found        | `npm install --save-dev ts-node`             |
+| Duplicate key error      | Run `npm run seed` again (clears & re-seeds) |
+| Port already in use      | Change `PORT` in `.env` or kill process      |
+| bcrypt errors            | `npm install bcrypt`                         |
+| Password hash mismatch   | Use `Password123!` for all seeded users      |
 
 ---
 
 ## 🎓 Key Concepts
 
 ### Embedded vs Referenced
+
 - **Used**: Embedded bookings within hotels
 - **Schema**: `Hotel { bookings: [Booking] }`
 - **Advantage**: Single query for hotel + bookings
 - **Alternative**: Separate Booking collection (not used here)
 
 ### Seeding Strategy
+
 - **Bulk insert**: Efficient database operations
 - **Relationships**: Proper user/hotel/booking links
 - **Validation**: Mongoose schema enforcement
 - **Randomization**: Realistic data distribution
 
 ### Password Security
+
 - **Hash Algorithm**: bcrypt
 - **Salt Rounds**: 10 (production-grade)
 - **Test Password**: Password123!
@@ -344,16 +359,19 @@ db.hotels.countDocuments()   # Should return 18
 ## 💡 Pro Tips
 
 1. **Freeze Current Data**
+
    ```bash
    mongodump --uri "mongodb://localhost:27017/hotel_management_app" --out ./backup
    ```
 
 2. **Restore from Backup**
+
    ```bash
    mongorestore --uri "mongodb://localhost:27017/hotel_management_app" ./backup
    ```
 
 3. **View Real-Time Data**
+
    ```bash
    # MongoDB Compass: Visual database browser
    # MongoDB Shell: Command-line access
