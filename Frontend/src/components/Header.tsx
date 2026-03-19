@@ -29,6 +29,12 @@ const Header = () => {
                                 >
                                     My Hotels
                                 </Link>
+                                <Link
+                                    to='/dashboard'
+                                    className='flex items-center justify-center text-white px-3 font-bold bg-black hover:bg-gray-100 hover:text-green-500'
+                                >
+                                    Dashboard
+                                </Link>
                                 <SignOutButtom />
                             </>
                             :

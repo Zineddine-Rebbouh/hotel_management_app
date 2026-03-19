@@ -10,6 +10,8 @@ import Search from "./pages/Search"
 import Detail from "./pages/DetailedHotel"
 import Booking from "./pages/Booking"
 import Home from "./pages/Home"
+import MyBookings from "./pages/MyBookings"
+import Dashboard from "./pages/Dashboard"
 
 function App() {
   const { isLoggedIn } = useAppContext()
@@ -42,6 +44,8 @@ function App() {
             <Route path="/add-hotel" element={<Layout><AddHotel /></Layout>} />
             <Route path="/hotel/:hotelId/booking" element={<Layout><Booking /></Layout>} />
             <Route path="/my-hotels" element={<Layout><MyHotels /></Layout>} />
+            <Route path="/my-bookings" element={<Layout><MyBookings /></Layout>} />
+            <Route path="/dashboard" element={<Layout><Dashboard /></Layout>} />
             <Route path="/edit-hotel/:hotelId" element={<Layout><EditHotel /></Layout>} />
           </>
         }

@@ -1,22 +1,22 @@
-import { validateToken } from "../Middelware/validateToken"
+import { validateToken } from "../Middleware/validateToken";
 
-const express = require('express')
-const UserController = require('../Controllers/UserController')
-const router = express.Router()
-const { check } = require('express-validator')
-router.post('/register',
-    [
-        check("firstname", "First Name is required").isString(),
-        check("lastname", "Last Name is required").isString(),
-        check("email", "Email is required").isEmail(),
-        check("password", "Password with 6 or more characters required").isLength({ min: 6 })
-    ],
-    UserController.register
-)
+const express = require("express");
+const UserController = require("../Controllers/UserController");
+const router = express.Router();
+const { check } = require("express-validator");
+router.post(
+  "/register",
+  [
+    check("firstname", "First Name is required").isString(),
+    check("lastname", "Last Name is required").isString(),
+    check("email", "Email is required").isEmail(),
+    check("password", "Password with 6 or more characters required").isLength({
+      min: 6,
+    }),
+  ],
+  UserController.register,
+);
 
-router.get('/me',
-    validateToken,
-    UserController.getUserDetails
-)
+router.get("/me", validateToken, UserController.getUserDetails);
 
-module.exports = router; 
+module.exports = router;

@@ -4,189 +4,257 @@ import { uploadImages } from "../routes/MyhotelsRoutes";
 import { validationResult } from "express-validator";
 
 export const addHotel = async (req: Request, res: Response) => {
-    try {
-        const imageFiles = req.files as Express.Multer.File[];
-        const newHotel: hotelType = req.body;
+  try {
+    const imageFiles = req.files as Express.Multer.File[];
+    const newHotel: hotelType = req.body;
 
-        const imageUrls = await uploadImages(imageFiles);
+    const imageUrls = await uploadImages(imageFiles);
 
-        newHotel.imageUrls = imageUrls;
-        newHotel.lastUpdated = new Date();
-        newHotel.userId = req.userId;
+    newHotel.imageUrls = imageUrls;
+    newHotel.lastUpdated = new Date();
+    newHotel.userId = req.userId;
 
-        const hotel = new Hotel(newHotel);
-        await hotel.save();
+    const hotel = new Hotel(newHotel);
+    await hotel.save();
 
-        res.status(201).send(hotel);
-    } catch (error) {
-        console.log(error);
-        res.status(500).json({ message: error });
-    }
-}
+    res.status(201).send(hotel);
+  } catch (error) {
+    console.log(error);
+    res.status(500).json({ message: error });
+  }
+};
 
 export const getMyHotels = async (req: Request, res: Response) => {
-    try {
-        const hotels = await Hotel.find({ userId: req.userId })
-            .sort("-lastUpdated");
+  try {
+    const hotels = await Hotel.find({ userId: req.userId }).sort(
+      "-lastUpdated",
+    );
 
-        res.status(200).json(hotels)
-    } catch (e) {
-        res.status(500).json({ message: 'Server error' });
-    }
-}
+    res.status(200).json(hotels);
+  } catch (e) {
+    res.status(500).json({ message: "Server error" });
+  }
+};
 
 export const getHotel = async (req: Request, res: Response) => {
-    const id = req.params.id.toString();
-    try {
-        const hotel = await Hotel.findOne({
-            _id: id,
-            userId: req.userId,
-        });
-        res.json(hotel);
-    } catch (error) {
-        res.status(500).json({ message: "Error fetching hotels" });
-    }
-}
+  const id = req.params.id.toString();
+  try {
+    const hotel = await Hotel.findOne({
+      _id: id,
+      userId: req.userId,
+    });
+    res.json(hotel);
+  } catch (error) {
+    res.status(500).json({ message: "Error fetching hotels" });
+  }
+};
 
 export const updateHotel = async (req: Request, res: Response) => {
-    try {
-        const updatedHotel: hotelType = req.body;
-        updatedHotel.lastUpdated = new Date();
+  try {
+    const updatedHotel: hotelType = req.body;
+    updatedHotel.lastUpdated = new Date();
 
-        const hotel = await Hotel.findOneAndUpdate(
-            {
-                _id: req.params.hotelId,
-                userId: req.userId,
-            },
-            updatedHotel,
-            { new: true }
-        );
+    const hotel = await Hotel.findOneAndUpdate(
+      {
+        _id: req.params.hotelId,
+        userId: req.userId,
+      },
+      updatedHotel,
+      { new: true },
+    );
 
-        if (!hotel) {
-            return res.status(404).json({ message: "Hotel not found" });
-        }
-
-        const files = req.files as Express.Multer.File[];
-        const updatedImageUrls = await uploadImages(files);
-
-        hotel.imageUrls = [
-            ...updatedImageUrls,
-            ...(updatedHotel.imageUrls || []),
-        ];
-
-        await hotel.save();
-        res.status(201).json(hotel);
-    } catch (error) {
-        res.status(500).json({ message: "Something went throw" });
+    if (!hotel) {
+      return res.status(404).json({ message: "Hotel not found" });
     }
-}
+
+    const files = req.files as Express.Multer.File[];
+    const updatedImageUrls = await uploadImages(files);
+
+    hotel.imageUrls = [...updatedImageUrls, ...(updatedHotel.imageUrls || [])];
+
+    await hotel.save();
+    res.status(201).json(hotel);
+  } catch (error) {
+    res.status(500).json({ message: "Something went throw" });
+  }
+};
+
+// ============================================
+// GET Dashboard Statistics
+// GET /api/hotels/dashboard/stats
+// ============================================
+export const getDashboardStats = async (req: Request, res: Response) => {
+  try {
+    const userId = req.userId;
+
+    // Get all hotels owned by the user
+    const hotels = await Hotel.find({ userId });
+
+    // Calculate statistics
+    let totalHotels = hotels.length;
+    let totalBookings = 0;
+    let totalRevenue = 0;
+    const bookingsByMonth: { [key: string]: number } = {};
+    const hotelBookingStats: any[] = [];
+
+    for (const hotel of hotels) {
+      const hotelBookings = hotel.bookings || [];
+      totalBookings += hotelBookings.length;
+
+      hotelBookingStats.push({
+        hotelId: hotel._id,
+        hotelName: hotel.name,
+        city: hotel.city,
+        bookingsCount: hotelBookings.length,
+        revenue: hotelBookings.reduce((sum, b) => sum + (b.totalCost || 0), 0),
+      });
+
+      for (const booking of hotelBookings) {
+        totalRevenue += booking.totalCost || 0;
+        const monthKey = new Date(booking.checkIn).toLocaleString("default", {
+          month: "long",
+          year: "numeric",
+        });
+        bookingsByMonth[monthKey] = (bookingsByMonth[monthKey] || 0) + 1;
+      }
+    }
+
+    const avgBookingsPerHotel =
+      totalHotels > 0 ? (totalBookings / totalHotels).toFixed(2) : 0;
+
+    return res.status(200).json({
+      success: true,
+      statistics: {
+        totalHotels,
+        totalBookings,
+        totalRevenue,
+        avgBookingsPerHotel,
+        bookingsByMonth,
+        hotelStats: hotelBookingStats,
+      },
+    });
+  } catch (error) {
+    console.error("Error fetching dashboard stats:", error);
+    return res
+      .status(500)
+      .json({ success: false, message: "Error fetching dashboard statistics" });
+  }
+};
 
 export const searchHotels = async (req: Request, res: Response) => {
-    try {
-
-        let sortOptions = {};
-        switch (req.query.sortOption) {
-            case "starRating":
-                sortOptions = { starRating: -1 };
-                break;
-            case "pricePerNightAsc":
-                sortOptions = { pricePerNight: 1 };
-                break;
-            case "pricePerNightDesc":
-                sortOptions = { pricePerNight: -1 };
-                break;
-        }
-
-        const query = constructSearchQuery(req.query);
-
-
-        const pageSize = 5;
-        const pageNumber = parseInt(req.query.page ? req.query.page.toString() : '1');
-        const skip = (pageNumber - 1) * pageSize;
-        const hotels = await Hotel.find(query).sort(sortOptions).skip(skip).limit(pageSize);
-        const totalNumberOfHotelsExisted = await Hotel.countDocuments()
-
-        console.log('here search controller');
-
-        const response = {
-            data: hotels, pagination: { totalNumberOfHotelsExisted, pageNumber, pages: Math.ceil(totalNumberOfHotelsExisted / pageSize) }
-        }
-
-        res.json(response)
-    } catch (error) {
-        console.log(error);
-        res.status(500).json({ message: "Something went throw" });
+  try {
+    let sortOptions = {};
+    switch (req.query.sortOption) {
+      case "starRating":
+        sortOptions = { starRating: -1 };
+        break;
+      case "pricePerNightAsc":
+        sortOptions = { pricePerNight: 1 };
+        break;
+      case "pricePerNightDesc":
+        sortOptions = { pricePerNight: -1 };
+        break;
     }
-}
+
+    const query = constructSearchQuery(req.query);
+
+    const pageSize = 5;
+    const pageNumber = parseInt(
+      req.query.page ? req.query.page.toString() : "1",
+    );
+    const skip = (pageNumber - 1) * pageSize;
+    const hotels = await Hotel.find(query)
+      .sort(sortOptions)
+      .skip(skip)
+      .limit(pageSize);
+    const totalNumberOfHotelsExisted = await Hotel.countDocuments();
+
+    const response = {
+      success: true,
+      data: hotels,
+      pagination: {
+        totalNumberOfHotelsExisted,
+        pageNumber,
+        pages: Math.ceil(totalNumberOfHotelsExisted / pageSize),
+      },
+    };
+
+    res.json(response);
+  } catch (error) {
+    console.error("Error searching hotels:", error);
+    res.status(500).json({ success: false, message: "Something went wrong" });
+  }
+};
 
 const constructSearchQuery = (queryParams: any) => {
-    let constructedQuery: any = {};
+  let constructedQuery: any = {};
 
-    if (queryParams.destination) {
-        constructedQuery.$or = [
-            { city: new RegExp(queryParams.destination, "i") },
-            { country: new RegExp(queryParams.destination, "i") },
-        ];
-    }
+  if (queryParams.destination) {
+    constructedQuery.$or = [
+      { city: new RegExp(queryParams.destination, "i") },
+      { country: new RegExp(queryParams.destination, "i") },
+    ];
+  }
 
-    if (queryParams.adultCount) {
-        constructedQuery.adultCount = {
-            $gte: parseInt(queryParams.adultCount),
-        };
-    }
+  if (queryParams.adultCount) {
+    constructedQuery.adultCount = {
+      $gte: parseInt(queryParams.adultCount),
+    };
+  }
 
-    if (queryParams.childCount) {
-        constructedQuery.childCount = {
-            $gte: parseInt(queryParams.childCount),
-        };
-    }
+  if (queryParams.childCount) {
+    constructedQuery.childCount = {
+      $gte: parseInt(queryParams.childCount),
+    };
+  }
 
-    if (queryParams.facilities) {
-        constructedQuery.facilities = {
-            $all: Array.isArray(queryParams.facilities)
-                ? queryParams.facilities
-                : [queryParams.facilities],
-        };
-    }
+  if (queryParams.facilities) {
+    constructedQuery.facilities = {
+      $all: Array.isArray(queryParams.facilities)
+        ? queryParams.facilities
+        : [queryParams.facilities],
+    };
+  }
 
-    if (queryParams.types) {
-        constructedQuery.type = {
-            $in: Array.isArray(queryParams.types)
-                ? queryParams.types
-                : [queryParams.types],
-        };
-    }
+  if (queryParams.types) {
+    constructedQuery.type = {
+      $in: Array.isArray(queryParams.types)
+        ? queryParams.types
+        : [queryParams.types],
+    };
+  }
 
-    if (queryParams.stars) {
-        const starRatings = Array.isArray(queryParams.stars)
-            ? queryParams.stars.map((star: string) => parseInt(star))
-            : parseInt(queryParams.stars);
-        constructedQuery.starRating = { $in: starRatings };
-    }
+  if (queryParams.stars) {
+    const starRatings = Array.isArray(queryParams.stars)
+      ? queryParams.stars.map((star: string) => parseInt(star))
+      : parseInt(queryParams.stars);
+    constructedQuery.starRating = { $in: starRatings };
+  }
 
-    if (queryParams.maxPrice) {
-        constructedQuery.pricePerNight = {
-            $lte: parseInt(queryParams.maxPrice).toString(),
-        };
-    }
+  if (queryParams.maxPrice) {
+    constructedQuery.pricePerNight = {
+      $lte: parseInt(queryParams.maxPrice).toString(),
+    };
+  }
 
-    return constructedQuery;
+  return constructedQuery;
 };
 
 export const getHotelById = async (req: Request, res: Response) => {
-    const errors = validationResult(req)
-    if (!errors.isEmpty()) {
-        return res.status(400).json({ success: false, error: 'Bad request', data: errors.array() })
-    }
+  const errors = validationResult(req);
+  if (!errors.isEmpty()) {
+    return res
+      .status(400)
+      .json({ success: false, error: "Bad request", data: errors.array() });
+  }
 
-    const id = req.params.id.toString()
+  const id = req.params.id.toString();
 
-    try {
-        const hotel = await Hotel.findById(id)
-        return res.status(200).json(hotel)
-    } catch (error) {
-        console.log(error);
-        return res.status(500).json({ message: "error fetching the hotel " })
-
-    }
-}
+  try {
+    const hotel = await Hotel.findById(id);
+    return res.status(200).json(hotel);
+  } catch (error) {
+    console.log(error);
+    return res.status(500).json({ message: "error fetching the hotel " });
+  }
+};
