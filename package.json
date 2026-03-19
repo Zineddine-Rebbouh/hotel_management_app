@@ -1,5 +1,25 @@
 {
+  "name": "hotel-management-app",
+  "version": "1.0.0",
+  "description": "Full-stack hotel booking management application",
+  "main": "Backend/dist/server.js",
+  "scripts": {
+    "dev": "concurrently \"npm run dev --prefix Backend\" \"npm run dev --prefix Frontend\"",
+    "build": "npm run build --prefix Backend && npm run build --prefix Frontend",
+    "start": "npm run start --prefix Backend",
+    "seed": "npm run seed --prefix Backend",
+    "install:all": "npm install && npm install --prefix Backend && npm install --prefix Frontend"
+  },
+  "keywords": [
+    "hotel",
+    "booking",
+    "management",
+    "fullstack"
+  ],
+  "author": "Zinou Lite",
+  "license": "ISC",
   "devDependencies": {
-    "@types/react-datepicker": "^6.2.0"
+    "@types/react-datepicker": "^6.2.0",
+    "concurrently": "^8.2.2"
   }
 }
