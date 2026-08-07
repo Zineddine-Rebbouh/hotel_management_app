@@ -3,10 +3,18 @@ import User from "../models/User";
 const jwt = require("jsonwebtoken");
 const { validationResult } = require("express-validator");
 
+// Shared secure cookie configuration.
+// SameSite: "strict" is the primary CSRF mitigation for same-origin cookie auth.
+const buildCookieConfig = () => ({
+  httpOnly: true, // Prevents client-side JS access to the cookie
+  secure: process.env.NODE_ENV === "production", // HTTPS only in production
+  sameSite: "strict" as const, // CSRF mitigation: cookie not sent on cross-site requests
+  maxAge: 86400000, // 24 hours in milliseconds
+});
+
 export const register = async (req: Request, res: Response<any>) => {
   try {
     const errors = validationResult(req);
-    // Check if req.body exists and is not null
 
     if (!errors.isEmpty()) {
       return res.status(400).json({
@@ -15,31 +23,47 @@ export const register = async (req: Request, res: Response<any>) => {
       });
     }
 
-    const existingUser = await User.findOne({ email: req.body.email });
+    // SECURITY FIX: Extract only the expected fields instead of passing the entire
+    // req.body to the User constructor. Passing req.body directly allows an attacker
+    // to set arbitrary Mongoose fields (mass assignment / prototype pollution).
+    // The global mongo-sanitize middleware already strips $ and . operators, but
+    // allow-listing fields here is defense in depth.
+    const { firstname, lastname, email, password } = req.body;
+
+    const sanitizedEmail = String(email || "").toLowerCase().trim();
+
+    if (!firstname || !lastname || !sanitizedEmail || !password) {
+      return res.status(400).json({
+        success: false,
+        message: "All fields are required",
+      });
+    }
+
+    const existingUser = await User.findOne({ email: sanitizedEmail });
 
     if (existingUser) {
       return res.status(400).json({ message: "User already exists" });
     }
-    const user = new User(req.body);
+
+    // Create user with only the allowed fields
+    const user = new User({
+      firstname: String(firstname),
+      lastname: String(lastname),
+      email: sanitizedEmail,
+      password: String(password),
+    });
     await user.save();
 
-    // creating token
+    // Creating token
     const token = await jwt.sign(
       { userId: user._id },
-      process.env.JWT_SECRET as String,
+      process.env.JWT_SECRET as string,
       {
         expiresIn: "1d",
       },
     );
 
-    const cookieConfig = {
-      httpOnly: true, // to disable accessing cookie via client side js
-      secure: process.env.PROJECT_STATUS === "production", // to force https (if you use it)
-      maxAge: 86400000, // ttl in seconds (remove this option and cookie will die when browser is closed)
-    };
-
-    res.cookie("auth_token", token, cookieConfig);
-    res.cookie("auth_token", token, cookieConfig);
+    res.cookie("auth_token", token, buildCookieConfig());
     return res
       .status(201)
       .json({ success: true, message: "Registration successful" });
@@ -66,6 +90,3 @@ export const getUserDetails = async (req: Request, res: Response) => {
       .json({ success: false, message: "Internal server error" });
   }
 };
-// export const login = async (req: Request, res: Response<any>) => {
-//     // Implement login functionality...
-// };

@@ -2,6 +2,7 @@ import { Request, Response } from "express";
 import Hotel, { hotelType } from "../models/hotels";
 import { uploadImages } from "../routes/MyhotelsRoutes";
 import { validationResult } from "express-validator";
+import { escapeRegex, MAX_DESTINATION_LENGTH } from "../utils/escapeRegex";
 
 export const addHotel = async (req: Request, res: Response) => {
   try {
@@ -20,7 +21,7 @@ export const addHotel = async (req: Request, res: Response) => {
     res.status(201).send(hotel);
   } catch (error) {
     console.log(error);
-    res.status(500).json({ message: error });
+    res.status(500).json({ message: "Something went wrong" });
   }
 };
 
@@ -51,8 +52,37 @@ export const getHotel = async (req: Request, res: Response) => {
 
 export const updateHotel = async (req: Request, res: Response) => {
   try {
-    const updatedHotel: hotelType = req.body;
-    updatedHotel.lastUpdated = new Date();
+    // Extract only known/safe fields to prevent mass assignment / NoSQL injection.
+    // The global mongo-sanitize middleware already strips $ and . operators from
+    // req.body, but we additionally allow-list fields here as defense in depth.
+    const {
+      name,
+      city,
+      country,
+      description,
+      type,
+      pricePerNight,
+      starRating,
+      adultCount,
+      childCount,
+      facilities,
+      imageUrls,
+    } = req.body;
+
+    const updatedHotel: Partial<hotelType> = {
+      name,
+      city,
+      country,
+      description,
+      type,
+      pricePerNight,
+      starRating,
+      adultCount,
+      childCount,
+      facilities,
+      imageUrls,
+      lastUpdated: new Date(),
+    };
 
     const hotel = await Hotel.findOneAndUpdate(
       {
@@ -75,7 +105,7 @@ export const updateHotel = async (req: Request, res: Response) => {
     await hotel.save();
     res.status(201).json(hotel);
   } catch (error) {
-    res.status(500).json({ message: "Something went throw" });
+    res.status(500).json({ message: "Something went wrong" });
   }
 };
 
@@ -190,9 +220,21 @@ const constructSearchQuery = (queryParams: any) => {
   let constructedQuery: any = {};
 
   if (queryParams.destination) {
+    const rawDestination = String(queryParams.destination);
+
+    // Guard: reject overly long inputs that could stress the regex engine
+    if (rawDestination.length > MAX_DESTINATION_LENGTH) {
+      return constructedQuery; // Return empty query — no match
+    }
+
+    // SECURITY FIX: Escape all regex metacharacters before constructing RegExp.
+    // Without escaping, a crafted destination string like "(((a+)+)+)" causes
+    // catastrophic backtracking (ReDoS vulnerability — CodeQL CWE-730).
+    const safeDestination = escapeRegex(rawDestination);
+
     constructedQuery.$or = [
-      { city: new RegExp(queryParams.destination, "i") },
-      { country: new RegExp(queryParams.destination, "i") },
+      { city: new RegExp(safeDestination, "i") },
+      { country: new RegExp(safeDestination, "i") },
     ];
   }
 

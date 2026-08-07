@@ -7,22 +7,48 @@ import {
   getDashboardStats,
 } from "../Controllers/hotelsController";
 import { validateToken } from "../Middleware/validateToken";
+import { generalLimiter } from "../Middleware/rateLimiter";
 import { body } from "express-validator";
 import cloudinary from "cloudinary";
 import Hotel, { hotelType } from "../models/hotels";
 
 const router = express.Router();
 
+// ─── Multer configuration ─────────────────────────────────────────────────────
 const storage = multer.memoryStorage();
+
+/** Allowed MIME types for hotel image uploads */
+const ALLOWED_IMAGE_TYPES = [
+  "image/jpeg",
+  "image/jpg",
+  "image/png",
+  "image/webp",
+  "image/gif",
+];
+
 const upload = multer({
   storage: storage,
   limits: {
-    fileSize: 5 * 1024 * 1024, // 5MB
+    fileSize: 5 * 1024 * 1024, // 5MB per file
+    files: 6, // Maximum 6 files
+  },
+  fileFilter: (_req, file, cb) => {
+    if (ALLOWED_IMAGE_TYPES.includes(file.mimetype)) {
+      cb(null, true);
+    } else {
+      cb(
+        new Error(
+          `Invalid file type. Only ${ALLOWED_IMAGE_TYPES.join(", ")} are allowed.`,
+        ),
+      );
+    }
   },
 });
 
+// ─── Create hotel ─────────────────────────────────────────────────────────────
 router.post(
   "/",
+  generalLimiter,
   validateToken,
   [
     body("name").notEmpty().withMessage("Name is required"),
@@ -62,14 +88,28 @@ router.post(
   },
 );
 
-router.get("/:id", validateToken, getHotel);
+// ─── Get single hotel by ID ───────────────────────────────────────────────────
+router.get("/:id", generalLimiter, validateToken, getHotel);
 
-router.get("/", validateToken, getMyHotels);
+// ─── Get all hotels for authenticated user ────────────────────────────────────
+router.get("/", generalLimiter, validateToken, getMyHotels);
 
-// Dashboard stats endpoint
-router.get("/dashboard/stats", validateToken, getDashboardStats);
+// ─── Dashboard stats ──────────────────────────────────────────────────────────
+router.get(
+  "/dashboard/stats",
+  generalLimiter,
+  validateToken,
+  getDashboardStats,
+);
 
-router.put("/:hotelId", validateToken, upload.array("imageFiles"), updateHotel);
+// ─── Update hotel ─────────────────────────────────────────────────────────────
+router.put(
+  "/:hotelId",
+  generalLimiter,
+  validateToken,
+  upload.array("imageFiles"),
+  updateHotel,
+);
 
 export async function uploadImages(imageFiles: Express.Multer.File[]) {
   const uploadPromises = imageFiles.map(async (image) => {

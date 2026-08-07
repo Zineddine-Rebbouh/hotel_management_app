@@ -20,8 +20,12 @@ export const validateToken = async (
     return res.status(401).json({ success: false, message: "Unauthorized" });
   }
 
+  // JWT_SECRET is validated at startup in server.ts (process.exit(1) if missing).
+  // Asserting as string here is safe because the server never starts without it.
+  const secret = process.env.JWT_SECRET as string;
+
   try {
-    const decoded = jwt.verify(token, process.env.JWT_SECRET || "") as any;
+    const decoded = jwt.verify(token, secret) as any;
     req.userId = decoded.userId;
     next();
   } catch (error) {

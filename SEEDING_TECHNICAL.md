@@ -583,7 +583,7 @@ process.env.MONGO_DB_CONNECTION
 mongodb://localhost:27017/hotel_management_app
 
 // Or MongoDB Atlas
-mongodb+srv://user:password@cluster.mongodb.net/db
+mongodb+srv://<username>:<password>@<cluster>.mongodb.net/<db>
 ```
 
 ---

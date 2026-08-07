@@ -1,11 +1,15 @@
 import { validateToken } from "../Middleware/validateToken";
+import { authLimiter, generalLimiter } from "../Middleware/rateLimiter";
 
 const express = require("express");
 const UserController = require("../Controllers/UserController");
 const router = express.Router();
 const { check } = require("express-validator");
+
+// Strict rate limiting on registration — prevents account farming / DoS
 router.post(
   "/register",
+  authLimiter,
   [
     check("firstname", "First Name is required").isString(),
     check("lastname", "Last Name is required").isString(),
@@ -17,6 +21,6 @@ router.post(
   UserController.register,
 );
 
-router.get("/me", validateToken, UserController.getUserDetails);
+router.get("/me", generalLimiter, validateToken, UserController.getUserDetails);
 
 module.exports = router;

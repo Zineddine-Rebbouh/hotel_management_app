@@ -100,7 +100,7 @@ Update your `.env` file in the Backend directory:
 ```env
 MONGODB_URI=mongodb://localhost:27017/hotel_management_app
 # OR use your MongoDB Atlas connection string:
-# MONGODB_URI=mongodb+srv://user:password@cluster.mongodb.net/hotel_management_app
+# MONGODB_URI=mongodb+srv://<username>:<password>@<cluster>.mongodb.net/hotel_management_app
 ```
 
 ### Step 2: Navigate to Backend
@@ -408,7 +408,7 @@ npm install --save-dev ts-node
 mongod
 
 # For MongoDB Atlas, verify connection string in .env
-MONGODB_URI=mongodb+srv://user:password@your-cluster.mongodb.net/hotel_management_app
+MONGODB_URI=mongodb+srv://<username>:<password>@<your-cluster>.mongodb.net/hotel_management_app
 ```
 
 ### Issue: "E11000 duplicate key error"

@@ -3,7 +3,14 @@ import { getHotelById, searchHotels } from "../Controllers/hotelsController";
 import { param } from "express-validator";
 import Stripe from "stripe";
 import { validateToken } from "../Middleware/validateToken";
+import { generalLimiter, paymentLimiter } from "../Middleware/rateLimiter";
 import Hotel from "../models/hotels";
+
+if (!process.env.STRIPE_SECRET_KEY) {
+  throw new Error(
+    "FATAL: STRIPE_SECRET_KEY environment variable is not set.",
+  );
+}
 
 export type paymentIntentResponse = {
   totalCost: number;
@@ -23,12 +30,18 @@ export type BookingType = {
   checkIn: Date;
   totalCost: number;
 };
-const stripe = new Stripe(process.env.STRIPE_SECRET_KEY || "");
+
+const stripe = new Stripe(process.env.STRIPE_SECRET_KEY);
 
 const router = express.Router();
-router.get("/search", searchHotels);
+
+// ─── Public search endpoint ───────────────────────────────────────────────────
+router.get("/search", generalLimiter, searchHotels);
+
+// ─── Get bookings for authenticated user ─────────────────────────────────────
 router.get(
   "/user/bookings",
+  generalLimiter,
   validateToken,
   async (req: Request, res: Response) => {
     try {
@@ -65,14 +78,19 @@ router.get(
     }
   },
 );
+
+// ─── Get hotel by ID ──────────────────────────────────────────────────────────
 router.get(
   "/:id",
+  generalLimiter,
   param("id").notEmpty().withMessage("Params is required "),
   getHotelById,
 );
 
+// ─── Create Stripe payment intent ─────────────────────────────────────────────
 router.post(
   "/:hotelId/booking/payment-intent",
+  paymentLimiter,
   validateToken,
   async (req: Request, res: Response) => {
     try {
@@ -120,8 +138,10 @@ router.post(
   },
 );
 
+// ─── Confirm booking after payment ────────────────────────────────────────────
 router.post(
   "/:hotelId/bookings",
+  paymentLimiter,
   validateToken,
   async (req: Request, res: Response) => {
     try {
@@ -146,12 +166,10 @@ router.post(
       }
 
       if (paymentIntent.status !== "succeeded") {
-        return res
-          .status(400)
-          .json({
-            success: false,
-            message: `Payment not successful. Status: ${paymentIntent.status}`,
-          });
+        return res.status(400).json({
+          success: false,
+          message: `Payment not successful. Status: ${paymentIntent.status}`,
+        });
       }
 
       const newBooking: BookingType = {
@@ -188,14 +206,10 @@ router.post(
   },
 );
 
-export default router;
-
-// ============================================
-// GET all bookings for a specific hotel
-// GET /api/hotels/:hotelId/bookings
-// ============================================
+// ─── Get all bookings for a specific hotel (hotel owner only) ─────────────────
 router.get(
   "/:hotelId/bookings",
+  generalLimiter,
   validateToken,
   async (req: Request, res: Response) => {
     try {
@@ -210,12 +224,10 @@ router.get(
 
       // Only hotel owner can view bookings
       if (hotel.userId !== req.userId) {
-        return res
-          .status(403)
-          .json({
-            success: false,
-            message: "Unauthorized: You do not own this hotel",
-          });
+        return res.status(403).json({
+          success: false,
+          message: "Unauthorized: You do not own this hotel",
+        });
       }
 
       return res.status(200).json({
@@ -232,3 +244,5 @@ router.get(
     }
   },
 );
+
+export default router;

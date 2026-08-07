@@ -194,7 +194,7 @@ db.hotels.aggregate([
 MONGODB_URI=mongodb://localhost:27017/hotel_management_app
 
 # OR for MongoDB Atlas
-MONGODB_URI=mongodb+srv://username:password@cluster0.mongodb.net/hotel_management_app
+MONGODB_URI=mongodb+srv://<username>:<password>@<cluster>.mongodb.net/hotel_management_app
 
 # Other variables (if needed)
 NODE_ENV=development

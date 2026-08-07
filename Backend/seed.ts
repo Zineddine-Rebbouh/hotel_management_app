@@ -1,4 +1,5 @@
 import "dotenv/config";
+import crypto from "crypto";
 import mongoose from "mongoose";
 import User from "./src/models/User";
 import Hotel from "./src/models/hotels";
@@ -211,13 +212,26 @@ const CLOUDINARY_IMAGES = [
 // UTILITY FUNCTIONS
 // ============================================
 
+/**
+ * Cryptographically secure integer in [min, max] inclusive.
+ * Replaces Math.floor(Math.random() * ...) for CodeQL CWE-338 compliance.
+ */
+function randomInt(min: number, max: number): number {
+  return crypto.randomInt(min, max + 1);
+}
+
 function getRandomElement<T>(array: T[]): T {
-  return array[Math.floor(Math.random() * array.length)];
+  return array[crypto.randomInt(0, array.length)];
 }
 
 function getRandomElements<T>(array: T[], min: number, max: number): T[] {
-  const count = Math.floor(Math.random() * (max - min + 1)) + min;
-  const shuffled = [...array].sort(() => 0.5 - Math.random());
+  const count = randomInt(min, max);
+  // Fisher-Yates shuffle using crypto.randomInt
+  const shuffled = [...array];
+  for (let i = shuffled.length - 1; i > 0; i--) {
+    const j = crypto.randomInt(0, i + 1);
+    [shuffled[i], shuffled[j]] = [shuffled[j], shuffled[i]];
+  }
   return shuffled.slice(0, count);
 }
 
@@ -252,7 +266,7 @@ function getRandomPrice(): number {
     { min: 350, max: 500 },
   ];
   const range = getRandomElement(priceRanges);
-  return Math.floor(Math.random() * (range.max - range.min + 1)) + range.min;
+  return randomInt(range.min, range.max);
 }
 
 function getRandomStarRating(): number {
@@ -273,28 +287,28 @@ function generateFutureDate(daysAhead: number): Date {
 }
 
 function generateBookingDates(): { checkIn: Date; checkOut: Date } {
-  const bookingType = Math.random();
+  const bookingType = randomInt(0, 2); // 0=past, 1=current/upcoming, 2=far future
 
-  if (bookingType < 0.33) {
+  if (bookingType === 0) {
     // Past booking
-    const checkInDaysAgo = Math.floor(Math.random() * 180) + 10;
-    const lengthOfStay = Math.floor(Math.random() * 7) + 1;
+    const checkInDaysAgo = randomInt(10, 189);
+    const lengthOfStay = randomInt(1, 7);
     const checkIn = generatePastDate(checkInDaysAgo);
     const checkOut = new Date(checkIn);
     checkOut.setDate(checkOut.getDate() + lengthOfStay);
     return { checkIn, checkOut };
-  } else if (bookingType < 0.66) {
+  } else if (bookingType === 1) {
     // Current/upcoming booking
-    const checkInDaysAhead = Math.floor(Math.random() * 60) + 1;
-    const lengthOfStay = Math.floor(Math.random() * 14) + 1;
+    const checkInDaysAhead = randomInt(1, 60);
+    const lengthOfStay = randomInt(1, 14);
     const checkIn = generateFutureDate(checkInDaysAhead);
     const checkOut = new Date(checkIn);
     checkOut.setDate(checkOut.getDate() + lengthOfStay);
     return { checkIn, checkOut };
   } else {
     // Far future booking
-    const checkInDaysAhead = Math.floor(Math.random() * 180) + 60;
-    const lengthOfStay = Math.floor(Math.random() * 21) + 1;
+    const checkInDaysAhead = randomInt(60, 239);
+    const lengthOfStay = randomInt(1, 21);
     const checkIn = generateFutureDate(checkInDaysAhead);
     const checkOut = new Date(checkIn);
     checkOut.setDate(checkOut.getDate() + lengthOfStay);
@@ -311,7 +325,7 @@ async function generateUsers(count: number) {
   const usedEmails = new Set<string>();
 
   for (let i = 0; i < count; i++) {
-    const isMale = Math.random() > 0.5;
+    const isMale = randomInt(0, 1) === 1;
     const firstName = isMale
       ? getRandomElement(ALGERIAN_FIRST_NAMES_MALE)
       : getRandomElement(ALGERIAN_FIRST_NAMES_FEMALE);
@@ -351,8 +365,8 @@ function generateBookings(count: number, hotelPrice: number) {
     const lengthOfStay = Math.ceil(
       (checkOut.getTime() - checkIn.getTime()) / (1000 * 60 * 60 * 24),
     );
-    const adultCount = Math.floor(Math.random() * 3) + 1;
-    const childCount = Math.floor(Math.random() * 3);
+    const adultCount = randomInt(1, 3);
+    const childCount = randomInt(0, 2);
     const firstName = getRandomElement(bookingFirstNames);
     const lastName = getRandomElement(bookingLastNames);
     const email = generateEmail(firstName, lastName, i);
@@ -379,14 +393,14 @@ function generateHotels(count: number, userIds: string[]) {
   for (let i = 0; i < count; i++) {
     const city = getRandomElement(ALGERIAN_CITIES);
     const pricePerNight = getRandomPrice();
-    const bookingCount = Math.floor(Math.random() * 25) + 5;
+    const bookingCount = randomInt(5, 29);
     const bookings = generateBookings(bookingCount, pricePerNight);
 
     const selectedFacilities = getRandomElements(FACILITIES, 5, 12);
     const imageUrls = getRandomElements(CLOUDINARY_IMAGES, 3, 6);
 
     const description =
-      Math.random() > 0.5
+      randomInt(0, 1) === 1
         ? getRandomElement(HOTEL_DESCRIPTIONS_EN)
         : getRandomElement(HOTEL_DESCRIPTIONS_FR);
 
@@ -397,8 +411,8 @@ function generateHotels(count: number, userIds: string[]) {
       country: "Algeria",
       description: description,
       type: getRandomElement(ROOM_TYPES),
-      adultCount: Math.floor(Math.random() * 4) + 1,
-      childCount: Math.floor(Math.random() * 3),
+      adultCount: randomInt(1, 4),
+      childCount: randomInt(0, 2),
       facilities: selectedFacilities,
       pricePerNight: pricePerNight,
       starRating: getRandomStarRating(),
