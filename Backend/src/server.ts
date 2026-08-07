@@ -38,8 +38,9 @@ cloudinary.config({
 // ─────────────────────────────────────────────────────────────
 // CSRF Protection (Double-Submit Cookie pattern)
 // ─────────────────────────────────────────────────────────────
-const { generateToken, doubleCsrfProtection } = doubleCsrf({
+const { generateCsrfToken, doubleCsrfProtection } = doubleCsrf({
   getSecret: () => process.env.CSRF_SECRET as string,
+  getSessionIdentifier: (req: Request) => req.cookies["auth_token"] || "",
   cookieName: "x-csrf-token",
   cookieOptions: {
     httpOnly: true,
@@ -48,7 +49,7 @@ const { generateToken, doubleCsrfProtection } = doubleCsrf({
   },
   size: 64,
   ignoredMethods: ["GET", "HEAD", "OPTIONS"],
-  getTokenFromRequest: (req) => req.headers["x-csrf-token"] as string,
+  getCsrfTokenFromRequest: (req: Request) => req.headers["x-csrf-token"] as string,
 });
 
 // ─────────────────────────────────────────────────────────────
@@ -81,7 +82,7 @@ app.use((req: Request, _res: Response, next: NextFunction) => {
 // via the `x-csrf-token` header.
 // ─────────────────────────────────────────────────────────────
 app.get("/api/csrf-token", (req: Request, res: Response) => {
-  const token = generateToken(req, res);
+  const token = generateCsrfToken(req, res);
   res.json({ csrfToken: token });
 });
 
