@@ -1,5 +1,24 @@
-node_modules
+# Dependencies
+node_modules/
+
+# Environment files — never commit secrets
 .env
-.env.e2e
-.vscode
-dist
+.env.*
+!.env.example
+
+# Build outputs & temporary files
+dist/
+dist-ssr/
+*.log
+*.timestamp-*.mjs
+.DS_Store
+Thumbs.db
+
+# IDE & Editor files
+.vscode/
+.idea/
+*.suo
+*.ntvs*
+*.njsproj
+*.sln
+*.sw?

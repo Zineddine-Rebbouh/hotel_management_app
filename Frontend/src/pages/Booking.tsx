@@ -7,7 +7,6 @@ import { useSearchContext } from '../contexts/SearchContext';
 import BookingDeatailsSummary from '../components/BookingDeatailsSummary';
 import { Elements } from '@stripe/react-stripe-js';
 import { useAppContext } from '../contexts/AppContext';
-import { log } from 'console';
 
 const Booking = () => {
     const search = useSearchContext()

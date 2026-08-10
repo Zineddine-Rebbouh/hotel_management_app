@@ -47,7 +47,7 @@ const Dashboard = () => {
         </div>
       )}
 
-      {error && (
+      {!!error && (
         <div className="bg-red-100 border border-red-500 text-red-700 px-6 py-4 rounded">
           <p>Error loading statistics. Please try again later.</p>
         </div>

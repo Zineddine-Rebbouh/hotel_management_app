@@ -1,4 +1,3 @@
-import React from 'react'
 import { hotelType } from '../../../Backend/src/models/hotels'
 
 type Props = {

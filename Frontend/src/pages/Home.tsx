@@ -3,9 +3,10 @@ import * as apiClient from "../api/api-client";
 import LatestDestinationCard from "../components/LatestDestinationCard";
 
 const Home = () => {
-  const { data: hotels } = useQuery("fetchQuery", () =>
-    apiClient.getMyHotels(),
+  const { data: searchResult } = useQuery("fetchQuery", () =>
+    apiClient.searchHotels({})
   );
+  const hotels = searchResult?.data || [];
 
   const topRowHotels = hotels?.slice(0, 2) || [];
   const bottomRowHotels = hotels?.slice(2) || [];
