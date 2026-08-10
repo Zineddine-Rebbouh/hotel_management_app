@@ -3,9 +3,8 @@ import { useParams } from "react-router-dom";
 import { useMutation } from "react-query";
 import * as apiClient from "../api/api-client";
 import { useSearchContext } from "../contexts/SearchContext";
-import { UserType } from "../../../Backend/src/models/User";
+import { UserType, paymentIntentResponse } from "../types/shared";
 import { useAppContext } from "../contexts/AppContext";
-import { paymentIntentResponse } from "../../../Backend/src/routes/hotelsRoutes";
 import { CardElement, useElements, useStripe } from "@stripe/react-stripe-js";
 import { StripeCardElement } from "@stripe/stripe-js";
 

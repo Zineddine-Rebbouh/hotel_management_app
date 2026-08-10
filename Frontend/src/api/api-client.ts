@@ -1,9 +1,6 @@
 import { Inputs2 } from "../pages/Register";
 import { Inputs1 } from "../pages/Login";
-import { hotelType } from "../../../Backend/src/models/hotels";
-import { HotelSearchResponse } from "../../../Backend/src/types/types";
-import { UserType } from "../../../Backend/src/models/User";
-import { paymentIntentResponse } from "../../../Backend/src/routes/hotelsRoutes";
+import { hotelType, HotelSearchResponse, UserType, paymentIntentResponse } from "../types/shared";
 import { BookingFormData } from "../components/BookingForm";
 
 const API_BASE_URL =
