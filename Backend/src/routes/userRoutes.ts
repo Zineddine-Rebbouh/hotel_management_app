@@ -2,7 +2,7 @@ import { validateToken } from "../Middleware/validateToken";
 import { authLimiter, generalLimiter } from "../Middleware/rateLimiter";
 
 const express = require("express");
-const UserController = require("../Controllers/UserController");
+const UserController = require("../Controllers/userController");
 const router = express.Router();
 const { check } = require("express-validator");
 
