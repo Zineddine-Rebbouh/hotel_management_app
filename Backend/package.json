@@ -13,8 +13,14 @@
   "author": "Zinou Lite",
   "license": "ISC",
   "dependencies": {
+    "@types/bcrypt": "^6.0.0",
     "@types/cookie-parser": "^1.4.7",
+    "@types/cors": "^2.8.17",
+    "@types/express": "^4.17.21",
+    "@types/jsonwebtoken": "^9.0.10",
     "@types/mongo-sanitize": "^1.0.3",
+    "@types/multer": "^1.4.11",
+    "@types/node": "^20.10.5",
     "bcrypt": "^6.0.0",
     "cloudinary": "^2.0.3",
     "cookie-parser": "^1.4.6",
@@ -35,12 +41,6 @@
   },
   "devDependencies": {
     "@playwright/test": "^1.42.1",
-    "@types/bcrypt": "^6.0.0",
-    "@types/cors": "^2.8.17",
-    "@types/express": "^4.17.21",
-    "@types/jsonwebtoken": "^9.0.10",
-    "@types/multer": "^1.4.11",
-    "@types/node": "^20.10.5",
     "nodemon": "^3.0.2",
     "ts-node": "^10.9.2"
   }
