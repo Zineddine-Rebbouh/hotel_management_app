@@ -1,8 +1,8 @@
 #!/bin/bash
-# Hotel Management App - Local Setup & Verification Script
+# Holidays.com - Local Setup & Verification Script
 
 echo "======================================"
-echo "Hotel Management App - Setup Checker"
+echo "Holidays.com - Setup Checker"
 echo "======================================"
 echo ""
 

@@ -1,7 +1,7 @@
 {
-  "name": "hotel-management-app",
+  "name": "holidays",
   "version": "1.0.0",
-  "description": "Full-stack hotel booking management application",
+  "description": "Holidays.com - Full-stack hotel booking application",
   "main": "index.js",
   "scripts": {
     "dev": "concurrently \"npm run dev --prefix Backend\" \"npm run dev --prefix Frontend\"",

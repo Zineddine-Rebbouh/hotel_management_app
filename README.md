@@ -1,11 +1,11 @@
-# Hotel Management App - Setup & Development Guide
+# Holidays.com - Setup & Development Guide
 
 A full-stack hotel booking application built with **React + TypeScript + Express + MongoDB + Stripe**.
 
 ## 🏗️ Project Structure
 
 ```
-hotel_management_app/
+holidays/
 ├── Backend/              # Express server (Node.js/TypeScript)
 ├── Frontend/             # React + Vite (TypeScript)
 ├── e2e/                  # Playwright E2E tests
@@ -64,7 +64,7 @@ cp .env.example .env
 Edit `.env` with:
 
 ```
-MONGO_DB_CONNECTION=mongodb://localhost:27017/hotel_management_app
+MONGO_DB_CONNECTION=mongodb://localhost:27017/holidays
 PORT=8000
 NODE_ENV=development
 
@@ -325,7 +325,7 @@ Cannot find type definition file for 'react-datepicker'
 
 ✅ **User Authentication** — JWT-based login/registration  
 ✅ **Hotel Search & Filter** — By destination, facilities, price, ratings  
-✅ **Hotel Management** — Add, edit, delete hotels (owners only)  
+✅ **Holidays Management** — Add, edit, delete hotels (owners only)  
 ✅ **Image Uploads** — Via Cloudinary  
 ✅ **Payment Processing** — Stripe integration  
 ✅ **Booking System** — Create, track, and view bookings  

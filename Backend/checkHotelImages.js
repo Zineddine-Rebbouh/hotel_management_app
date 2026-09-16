@@ -2,7 +2,7 @@ const mongoose = require("mongoose");
 const Hotel = require("./src/models/hotels").default;
 
 async function run() {
-  await mongoose.connect("mongodb://localhost:27017/hotel_management_app");
+  await mongoose.connect("mongodb://localhost:27017/holidays");
   const hotel = await Hotel.findOne().lean();
   if (!hotel) {
     console.log("No hotel found");

@@ -118,7 +118,7 @@ export const logout = async () => {
 };
 
 // ─────────────────────────────────────────────────────────────
-// Hotel Management APIs (authenticated)
+// Holidays APIs (authenticated)
 // ─────────────────────────────────────────────────────────────
 
 export const addMyHotel = async (HotelFormData: FormData) => {
