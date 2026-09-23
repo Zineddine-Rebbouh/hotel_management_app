@@ -3,7 +3,7 @@
 A full-stack hotel booking platform where travelers can search and book stays, and hotel owners can list properties and track revenue. Built with **React, TypeScript, Express, MongoDB, and Stripe**, with an end-to-end **Playwright** test suite.
 
 <p align="center">
-[![Live Demo](https://img.shields.io/badge/demo-live-brightgreen)](https://hotel-management-app-rouge.vercel.app)
+![Live Demo](https://img.shields.io/badge/demo-live-brightgreen)](https://hotel-management-app-rouge.vercel.app)
 ![TypeScript](https://img.shields.io/badge/TypeScript-3178C6?logo=typescript&logoColor=white)
 ![React](https://img.shields.io/badge/React-61DAFB?logo=react&logoColor=black)
 ![Express](https://img.shields.io/badge/Express-000000?logo=express&logoColor=white)
