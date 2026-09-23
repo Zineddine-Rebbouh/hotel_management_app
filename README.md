@@ -1,4 +1,4 @@
-# 🏨 Holidays — Hotel Booking & Management Platform
+# 🏨 Holidays . Hotel Booking & Management Platform
 
 A full-stack hotel booking platform where travelers can search and book stays, and hotel owners can list properties and track revenue. Built with **React, TypeScript, Express, MongoDB, and Stripe**, with an end-to-end **Playwright** test suite.
 
